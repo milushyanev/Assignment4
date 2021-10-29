@@ -1,0 +1,139 @@
+
+CREATE TABLE address (
+                addressId INTEGER NOT NULL,
+                street1 VARCHAR(40) NOT NULL,
+                street2 VARCHAR(40) NOT NULL,
+                number INTEGER NOT NULL,
+                city VARCHAR(40) NOT NULL,
+                zip_code INTEGER NOT NULL,
+                phone_number INTEGER NOT NULL,
+                CONSTRAINT id PRIMARY KEY (addressId)
+);
+
+
+CREATE TABLE musician (
+                ssn INTEGER NOT NULL,
+                name VARCHAR(40) NOT NULL,
+                addressId INTEGER NOT NULL,
+                CONSTRAINT musician PRIMARY KEY (ssn)
+);
+
+
+CREATE TABLE album (
+                albumId INTEGER NOT NULL,
+                title VARCHAR(400) NOT NULL,
+                release_date DATE NOT NULL,
+                format VARCHAR NOT NULL,
+                age TIMESTAMP NOT NULL,
+                ssn_producer INTEGER NOT NULL,
+                ssn INTEGER NOT NULL,
+                CONSTRAINT album PRIMARY KEY (albumId)
+);
+
+
+CREATE TABLE song (
+                title VARCHAR(400) NOT NULL,
+                length INTEGER NOT NULL,
+                ssn_author INTEGER NOT NULL,
+                albumId INTEGER NOT NULL,
+                CONSTRAINT song PRIMARY KEY (title)
+);
+
+
+CREATE TABLE performs (
+                ssn INTEGER NOT NULL,
+                title VARCHAR(400) NOT NULL,
+                CONSTRAINT performs PRIMARY KEY (ssn, title)
+);
+
+
+CREATE TABLE instrument (
+                name VARCHAR(40) NOT NULL,
+                pitch VARCHAR NOT NULL,
+                CONSTRAINT id PRIMARY KEY (name)
+);
+
+
+CREATE TABLE sounds (
+                name VARCHAR(40) NOT NULL,
+                title VARCHAR(400) NOT NULL,
+                CONSTRAINT sounds PRIMARY KEY (name, title)
+);
+
+
+CREATE TABLE plays (
+                ssn INTEGER NOT NULL,
+                name VARCHAR(40) NOT NULL,
+                CONSTRAINT plays PRIMARY KEY (ssn, name)
+);
+
+
+ALTER TABLE musician ADD CONSTRAINT address_musician_fk
+FOREIGN KEY (addressId)
+REFERENCES address (addressId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE plays ADD CONSTRAINT musician_plays_fk
+FOREIGN KEY (ssn)
+REFERENCES musician (ssn)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE performs ADD CONSTRAINT musician_performs_fk
+FOREIGN KEY (ssn)
+REFERENCES musician (ssn)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE album ADD CONSTRAINT musician_album_fk
+FOREIGN KEY (ssn)
+REFERENCES musician (ssn)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE song ADD CONSTRAINT musician_song_fk
+FOREIGN KEY (ssn_author)
+REFERENCES musician (ssn)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE song ADD CONSTRAINT album_song_fk
+FOREIGN KEY (albumId)
+REFERENCES album (albumId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE sounds ADD CONSTRAINT song_sounds_fk
+FOREIGN KEY (title)
+REFERENCES song (title)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE performs ADD CONSTRAINT song_performs_fk
+FOREIGN KEY (title)
+REFERENCES song (title)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE plays ADD CONSTRAINT instrument_plays_fk
+FOREIGN KEY (name)
+REFERENCES instrument (name)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE sounds ADD CONSTRAINT instrument_sounds_fk
+FOREIGN KEY (name)
+REFERENCES instrument (name)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
