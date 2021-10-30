@@ -35,7 +35,7 @@ abstract class AccountHolder{
     this.ID = ID;
     this.address=address;
   }
-  public int nextID(){
+  public static int nextID(){
     return ID++;
   }  
 }
